@@ -1074,6 +1074,8 @@ struct MoveHelper {
   MOCK_METHOD1(Call, void(MoveOnly));
 };
 
+// Disable this test in MSVC 14, where it fails when SEH is enabled
+#if !defined(_MSC_VER) || (_MSC_VER >= 1500)
 TEST(ComparisonBaseTest, WorksWithMoveOnly) {
   MoveOnly m{0};
   MoveHelper helper;
@@ -1091,6 +1093,7 @@ TEST(ComparisonBaseTest, WorksWithMoveOnly) {
   EXPECT_CALL(helper, Call(Gt(ByRef(m))));
   helper.Call(MoveOnly(1));
 }
+#endif
 
 // Tests that IsNull() matches any NULL pointer of any type.
 TEST(IsNullTest, MatchesNullPointer) {
